@@ -19,6 +19,8 @@ var DATA_AUDIO_VOLUME_UP = {"format":"raw","freq":38,"data":[4713,1111,1232,1111
 
 var DATA_AUDIO_VOLUME_DOWN = {"format":"raw","freq":38,"data":[4713,1111,2451,1111,2451,1111,1232,1111,1232,1111,2451,1111,1232,1111,1232,1111,1232,1111,1232,1111,1232,1111,1232,1111,2451,1111,2451,1111,1232,1111,1232,42612,4713,1111,2451,1111,2451,1111,1232,1111,1232,1111,2451,1111,1232,1111,1232,1111,1232,1111,1232,1111,1232,1111,1232,1111,2451,1111,2451,1111,1232,1111,1232,42612,4713,1111,2451,1111,2451,1111,1232,1111,1232,1111,2451,1111,1232,1111,1232,1111,1232,1111,1232,1111,1232,1111,1232,1111,2451,1111,2451,1111,1232,1111,1232]}
 
+var DATA_EMPTY = {"format":"raw","freq":38,"data":[]}
+
 
 $(function() {
 
@@ -105,6 +107,16 @@ $(function() {
             .text('Failed to connect IRKit. Plese use home wifi AP');
         }
     }
+
+    function checkConnection() {
+        sendToIRKit(DATA_EMPTY)
+        .done(handleConnectionSuccess)
+        .fail(handleConnectionFail)
+        .always(function() {
+            setTimeout(checkConnection, 60000); // 1min
+        });
+    }
+    checkConnection();
 
     var attachFastClick = Origami.fastclick;
     attachFastClick(document.body);
