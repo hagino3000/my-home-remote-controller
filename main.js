@@ -67,12 +67,12 @@ $(function() {
     });
 
 
-    $('#audhiotv').click(function() {
+    $('#audiotv').click(function() {
         var promise = sendToIRKit(DATA_AUDIO_TV);
         buttonUIControll(promise, $(this));
     });
 
-    $('#audhiohdmi').click(function() {
+    $('#audiohdmi').click(function() {
         var promise = sendToIRKit(DATA_AUDIO_HDMI);
         buttonUIControll(promise, $(this));
     });
