@@ -103,7 +103,7 @@ $(function() {
         if (!$el.hasClass('fail')) {
             $el.addClass('fail')
             .removeClass('success')
-            .text('Failed to connect IRKit. Plese use sumer_g wifi AP');
+            .text('Failed to connect IRKit. Plese use sumer_g or sumer_a wifi AP');
         }
     }
 

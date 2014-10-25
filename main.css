@@ -42,7 +42,8 @@ table.menu td.full {
 }
 
 .active {
-    background-color: #0FF;
+    background-color: #35F;
+    color: #EEE;
 }
 
 
