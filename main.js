@@ -97,6 +97,10 @@ $(function() {
         buttonUIControll(promise, $(this));
     });
 
+    $('#reload').click(function() {
+        location.reload();
+    });
+
 
     function handleConnectionSuccess() {
         var $el = $('#message');
