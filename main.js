@@ -3,7 +3,12 @@ var IRKIT_API = 'http://192.168.10.4/messages';
 
 var DATA_TV_ONOFF = {"format":"raw","freq":38,"data":[640,4107,640,4107,640,4107,640,1738,640,1738,640,1738,640,4107,640,1738,640,1738,640,4107,640,1738,640,1738,640,1738,640,1738,640,1738,640,1738,640,52381,640,4107,640,4107,640,4107,640,1738,640,1738,640,1738,640,4107,640,1738,640,1738,640,4107,640,1738,640,1738,640,1738,640,1738,640,1738,640,1738,640]}
 
+
 var DATA_TV_CHIDEJI = {"format":"raw","freq":38,"data":[5408,4107,640,4107,640,1738,640,1738,640,1738,640,4107,686,1679,640,4107,686,1679,640,4107,640,4107,640,1738,640,4107,640,4107,640,4107,640,41171,686,4107,640,4107,640,4107,640,1679,640,1679,640,1679,640,4107,640,1738,686,4107,640,1738,640,4107,686,4107,686,1738,686,4107,640,4107,640,4107,640,41171,640,4107,686,4107,686,4107,686,1738,640,1738,640,1738,640,4107,640,1738,686,4107,640,1738,640,4107,640,4107,640,1738,640,4107,640,4107,640,4107,640,41171,640,4107,640,4107,640,4107,640,1738,640,1738,640,1738,640,4107,640,1738,640,4107,640,1738,640,4107,640,4107,640,1738,640,4107,686,4107,686,4107,686,41171,640,4107,686,4107,686,4107,686,1738,640,1738,640,1738,640,4107,640,1738,640,4107,640,1738,686,4107,640,4107,640,1738,640,4107,640,4107,640,4107,640]}
+
+var DATA_TV_CH_PLUS = {"format":"raw","freq":38,"data":[640,4107,640,4107,640,4107,640,1738,640,1738,640,1738,640,4107,663,1738,663,1738,663,4107,663,1738,663,4107,663,1738,710,1738,640,1738,640,1738,640,50610,663,4107,663,4107,663,4107,663,1738,663,1738,663,1738,663,4107,640,1738,640,1738,640,4107,640,1738,640,4107,640,1738,640,1738,640,1738,640,1738,640]}
+
+var DATA_TV_CH_MINUS = {"format":"raw","freq":38,"data":[686,4107,686,4107,686,4107,686,1738,640,1738,640,1738,640,4107,640,1738,640,1738,640,4107,640,1738,640,1738,640,4107,640,1738,686,1738,686,1738,686,50610,640,4107,640,4107,640,4107,640,1679,640,1679,640,1679,640,4107,640,1738,640,1738,640,4107,686,1679,619,1679,619,4107,640,1738,640,1738,640,1738,640]}
 
 var DATA_AUDIO_TV = {"format":"raw","freq":38,"data":[4713,1111,1232,1111,2451,1111,1232,1111,2451,1111,1232,1111,2451,1111,2451,1111,1232,1111,1232,1111,1232,1111,1232,1111,2451,1111,2451,1111,1232,1111,1232,41171,4713,1111,1232,1111,2451,1111,1232,1111,2451,1111,1232,1111,2451,1111,2451,1111,1232,1111,1232,1111,1232,1111,1232,1111,2451,1111,2451,1111,1232,1111,1232,41171,4713,1111,1232,1111,2451,1111,1232,1111,2451,1111,1232,1111,2451,1111,2451,1111,1232,1111,1232,1111,1232,1111,1232,1111,2451,1111,2451,1111,1232,1111,1232,41171,4713,1111,1232,1111,2451,1111,1232,1111,2451,1111,1232,1111,2451,1111,2451,1111,1232,1111,1232,1111,1232,1111,1232,1111,2451,1111,2451,1111,1232,1111,1232]}
 
@@ -15,114 +20,92 @@ var DATA_AUDIO_VOLUME_UP = {"format":"raw","freq":38,"data":[4713,1111,1232,1111
 
 var DATA_AUDIO_VOLUME_DOWN = {"format":"raw","freq":38,"data":[4713,1111,2451,1111,2451,1111,1232,1111,1232,1111,2451,1111,1232,1111,1232,1111,1232,1111,1232,1111,1232,1111,1232,1111,2451,1111,2451,1111,1232,1111,1232,42612,4713,1111,2451,1111,2451,1111,1232,1111,1232,1111,2451,1111,1232,1111,1232,1111,1232,1111,1232,1111,1232,1111,1232,1111,2451,1111,2451,1111,1232,1111,1232,42612,4713,1111,2451,1111,2451,1111,1232,1111,1232,1111,2451,1111,1232,1111,1232,1111,1232,1111,1232,1111,1232,1111,1232,1111,2451,1111,2451,1111,1232,1111,1232]}
 
+
 $(function() {
+
+    function sendToIRKit(data) {
+        return $.ajax({
+            url: IRKIT_API,
+            type: 'POST',
+            data: JSON.stringify(data)
+        });
+    }
+
+    function buttonUIControll(promise, $el) {
+        $el.addClass('active');
+        promise.done(function() {
+            handleConnectionSuccess();
+        }).fail(function(e) {
+            handleConnectionFail();
+        }).always(function() {
+            $el.removeClass('active');
+        });
+    }
+
     $('#tvonoff').click(function() {
-        $.ajax({
-            url: IRKIT_API,
-            type: 'POST',
-            data: JSON.stringify(DATA_TV_ONOFF)
-        }).done(function() {
-        }).fail(function(e) {
-            alert(e);
-        });
+        var promise = sendToIRKit(DATA_TV_ONOFF);
+        buttonUIControll(promise, $(this));
     });
 
-    $('#watchtv').click(function() {
-        $.ajax({
-            url: IRKIT_API,
-            type: 'POST',
-            data: JSON.stringify(DATA_TV_CHIDEJI)
-        }).done(function() {
-            setTimeout(function() {
-                var ret = $.ajax({
-                    url: IRKIT_API,
-                    type: 'POST',
-                    data: JSON.stringify(DATA_AUDIO_TV)
-                })
-                ret.done(function() {
-                    alert('OK');
-                });
-
-                ret.fail(function(e) {
-                    alert(e);
-                });
-            }, 2000);
-        }).fail(function(e) {
-            alert(e);
-        });
+    $('#tvchideji').click(function() {
+        var promise = sendToIRKit(DATA_TV_CHIDEJI);
+        buttonUIControll(promise, $(this));
     });
 
-    $('#watchhdmi').click(function() {
-        $.ajax({
-            url: IRKIT_API,
-            type: 'POST',
-            data: JSON.stringify(DATA_TV_HDMI)
-        }).done(function() {
-            setTimeout(function() {
-                console.log('Start post audio htmi');
-                var ret = $.ajax({
-                    url: IRKIT_API,
-                    type: 'POST',
-                    data: JSON.stringify(DATA_AUDIO_HDMI)
-                })
-                ret.done(function() {
-                    console.log('success post audio hdmi');
-                    alert('OK');
-                });
+    $('#tvhdmi').click(function() {
+        var promise = sendToIRKit(DATA_TV_HDMI);
+        buttonUIControll(promise, $(this));
+    });
 
-                ret.fail(function(e) {
-                    alert(e);
-                });
-            }, 2000);
-        }).fail(function(e) {
-            alert(e);
-        });
+    $('#channelminus').click(function() {
+        var promise = sendToIRKit(DATA_TV_CH_MINUS);
+        buttonUIControll(promise, $(this));
+    });
+
+    $('#channelplus').click(function() {
+        var promise = sendToIRKit(DATA_TV_CH_PLUS);
+        buttonUIControll(promise, $(this));
+    });
+
+
+    $('#audhiotv').click(function() {
+        var promise = sendToIRKit(DATA_AUDIO_TV);
+        buttonUIControll(promise, $(this));
+    });
+
+    $('#audhiohdmi').click(function() {
+        var promise = sendToIRKit(DATA_AUDIO_HDMI);
+        buttonUIControll(promise, $(this));
     });
 
     $('#volumeup').click(function() {
-        var req = $.ajax({
-            url: IRKIT_API,
-            type: 'POST',
-            data: JSON.stringify(DATA_AUDIO_VOLUME_UP)
-        }).done(function() {
-        }).fail(function(e) {
-            console.log(e);
-            alert(e);
-        });
+        var promise = sendToIRKit(DATA_AUDIO_VOLUME_UP);
+        buttonUIControll(promise, $(this));
     });
 
     $('#volumedown').click(function() {
-        var req = $.ajax({
-            url: IRKIT_API,
-            type: 'POST',
-            data: JSON.stringify(DATA_AUDIO_VOLUME_DOWN)
-        }).done(function() {
-        }).fail(function(e) {
-            console.log(e);
-            alert(e);
-        });
+        var promise = sendToIRKit(DATA_AUDIO_VOLUME_DOWN);
+        buttonUIControll(promise, $(this));
     });
 
-    setInterval(function() {
-        var req = $.ajax({
-            url: IRKIT_API,
-            type: 'GET'
-        }).done(function() {
-            $('#errormsg').hide(300);
-            $('#msg').show(300);
-        }).fail(function(e) {
-            $('#errormsg').show(300);
-            $('#msg').hide(300);
-        });
-    }, 10000);
 
-    var req = $.ajax({
-        url: IRKIT_API,
-        type: 'GET'
-    }).done(function() {
-        $('#msg').show(300);
-    }).fail(function(e) {
-        $('#errormsg').show(300);
-    });
+    function handleConnectionSuccess() {
+        var $el = $('#message');
+        if (!$el.hasClass('success')) {
+            $el.addClass('success')
+            .removeClass('fail')
+            .text('Successfully connected to IRKit');
+        }
+    }
+
+    function handleConnectionFail() {
+        var $el = $('#message');
+        if (!$el.hasClass('fail')) {
+            $el.addClass('fail')
+            .removeClass('success')
+            .text('Failed to connect IRKit. Plese use sumer_g wifi AP');
+        }
+    }
+
+    FastClick.attach(document.body);
 });
-

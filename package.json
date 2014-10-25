@@ -1,0 +1,27 @@
+{
+  "name": "my-home-remote-controller",
+  "version": "0.0.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "connect-livereload": "~0.5.0",
+    "grunt": "~0.4.5",
+    "grunt-contrib-connect": "~0.8.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-open": "~0.2.3",
+    "load-grunt-config": "~0.14.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hagino3000/my-home-remote-controller.git"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/hagino3000/my-home-remote-controller/issues"
+  }
+}

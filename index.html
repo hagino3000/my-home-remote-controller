@@ -6,18 +6,38 @@
   <title>index.html for mobile</title>
   <link rel="stylesheet" href="./main.css">
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script type="text/javascript" src="./fastclick.min.js"></script>
   <script type="text/javascript" src="./main.js"></script>
 </head>
 <body>
   <br>
   <h1>My Home Remocon</h1>
-  <div id="msg" style="display:none;">Successfully Connected to IRKit</div>
-  <div id="errormsg" style="display:none;">Cannot connect IRKit. sumer_gに接続してください。</div>
+  <div id="message">Checking...</div>
 
-  <div class="button" id="tvonoff">TV ON/OFF</div>
-  <div class="button" id="watchtv">Watch TV</div>
-  <div class="button" id="watchhdmi">Watch HDMI</div>
-  <div class="button" id="volumeup">Volume Up</div>
-  <div class="button" id="volumedown">Volume Down</div>
+  <h3>TV</h3>
+  <table class="menu">
+    <tr>
+      <td colspan="2" id="tvonoff" class="full">ON / OFF</td>
+    </tr>
+    <tr>
+      <td id="tvchideji">地デジ</td>
+      <td id="tvhdmi">HDMI</td>
+    </tr>
+    <tr>
+      <td id="channelminus">Ch. -</td>
+      <td id="channelplus">Ch. +</td>
+    </tr>
+  </table>
+
+  <h3>Audio</h3>
+  <table class="menu">
+    <tr>
+      <td id="audiotv">TV</td><td id="audiohdmi">HDMI</td>
+    </tr>
+    <tr>
+      <td id="volumedown">Vol. -</td><td id="volumeup">Vol. +</td>
+    </tr>
+  </table>
+
 </body>
 </html>
