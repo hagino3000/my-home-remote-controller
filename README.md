@@ -32,7 +32,7 @@ Timestamp     A/R    Flags  if Domain               Service Type         Instanc
 DATE: ---Sat 25 Oct 2014---
 23:15:35.078  ...STARTING...
 Timestamp     A/R Flags if Hostname                               Address                                      TTL
-23:15:35.239  Add     2  4 irkit951f.local.                       192.168.10.4                                 10
+23:15:35.239  Add     2  4 irkitXXXXX.local.                       192.168.10.4                                 10
 ```
 
 Show captured IR Message
