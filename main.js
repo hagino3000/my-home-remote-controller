@@ -1,4 +1,6 @@
-var IRKIT_API = 'http://192.168.10.2/messages';
+var IRKIT_API = 'https://api.getirkit.com/1/messages';
+var CLIENT_KEY = '';
+var DEVICE_ID = '';
 
 
 var DATA_TV_ONOFF = {"format":"raw","freq":38,"data":[640,4107,640,4107,640,4107,640,1738,640,1738,640,1738,640,4107,640,1738,640,1738,640,4107,640,1738,640,1738,640,1738,640,1738,640,1738,640,1738,640,52381,640,4107,640,4107,640,4107,640,1738,640,1738,640,1738,640,4107,640,1738,640,1738,640,4107,640,1738,640,1738,640,1738,640,1738,640,1738,640,1738,640]}
@@ -31,7 +33,11 @@ $(function() {
         return $.ajax({
             url: IRKIT_API,
             type: 'POST',
-            data: JSON.stringify(data)
+            data: {
+                clientkey: CLIENT_KEY,
+                deviceid: DEVICE_ID,
+                message: JSON.stringify(data)
+            }
         });
     }
 
