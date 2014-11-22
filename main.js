@@ -1,4 +1,4 @@
-var IRKIT_API = 'https://api.getirkit.com/1/messages';
+var IRKIT_API = 'https://api.getirkit.com/1';
 var CLIENT_KEY = '';
 var DEVICE_ID = '';
 
@@ -29,9 +29,11 @@ var DATA_EMPTY = {"format":"raw","freq":38,"data":[]}
 
 $(function() {
 
+    var BUTTON_WAIT = 500;
+
     function sendToIRKit(data) {
         return $.ajax({
-            url: IRKIT_API,
+            url: IRKIT_API + '/messages',
             type: 'POST',
             data: {
                 clientkey: CLIENT_KEY,
@@ -41,67 +43,50 @@ $(function() {
         });
     }
 
-    function buttonUIControll(promise, $el) {
-        $el.addClass('active');
+    function ping() {
+        return $.ajax({
+            url: IRKIT_API + '/door',
+            type: 'POST',
+            data: {
+                clientkey: CLIENT_KEY,
+                deviceid: DEVICE_ID,
+            }
+        });
+    }
+
+    function checkResponse(promise, $el) {
         promise.done(function() {
             handleConnectionSuccess();
         }).fail(function(e) {
             handleConnectionFail();
-        }).always(function() {
-            $el.removeClass('active');
         });
     }
 
-    $('#tvonoff').click(function() {
-        var promise = sendToIRKit(DATA_TV_ONOFF);
-        buttonUIControll(promise, $(this));
-    });
+    function registerButton(elementId, data) {
+        var $el = $(elementId);
+        $el.click(_.throttle(function() {
+            var promise = sendToIRKit(data);
+            checkResponse(promise, $(this));
+        }, BUTTON_WAIT));
 
-    $('#tvchideji').click(function() {
-        var promise = sendToIRKit(DATA_TV_CHIDEJI);
-        buttonUIControll(promise, $(this));
-    });
+        $el.on('touchstart', function() {
+            $(this).addClass('active');
+        });
+        $el.on('touchend', function() {
+            $(this).removeClass('active');
+        });
+    }
 
-    $('#tvhdmi').click(function() {
-        var promise = sendToIRKit(DATA_TV_HDMI);
-        buttonUIControll(promise, $(this));
-    });
-
-    $('#channelminus').click(function() {
-        var promise = sendToIRKit(DATA_TV_CH_MINUS);
-        buttonUIControll(promise, $(this));
-    });
-
-    $('#channelplus').click(function() {
-        var promise = sendToIRKit(DATA_TV_CH_PLUS);
-        buttonUIControll(promise, $(this));
-    });
-
-
-    $('#audiotv').click(function() {
-        var promise = sendToIRKit(DATA_AUDIO_TV);
-        buttonUIControll(promise, $(this));
-    });
-
-    $('#audiohdmi').click(function() {
-        var promise = sendToIRKit(DATA_AUDIO_HDMI);
-        buttonUIControll(promise, $(this));
-    });
-
-    $('#volumeup').click(function() {
-        var promise = sendToIRKit(DATA_AUDIO_VOLUME_UP);
-        buttonUIControll(promise, $(this));
-    });
-
-    $('#volumedown').click(function() {
-        var promise = sendToIRKit(DATA_AUDIO_VOLUME_DOWN);
-        buttonUIControll(promise, $(this));
-    });
-
-    $('#aircononoff').click(function() {
-        var promise = sendToIRKit(DATA_AIR_CONDITIONER_ONOFF);
-        buttonUIControll(promise, $(this));
-    });
+    registerButton('#tvonoff', DATA_TV_ONOFF);
+    registerButton('#tvchideji', DATA_TV_CHIDEJI);
+    registerButton('#tvhdmi', DATA_TV_HDMI);
+    registerButton('#channelminus', DATA_TV_CH_MINUS);
+    registerButton('#channelplus', DATA_TV_CH_PLUS);
+    registerButton('#audiotv', DATA_AUDIO_TV);
+    registerButton('#audiohdmi', DATA_AUDIO_HDMI);
+    registerButton('#volumeup', DATA_AUDIO_VOLUME_UP);
+    registerButton('#volumedown', DATA_AUDIO_VOLUME_DOWN);
+    registerButton('#aircononoff', DATA_AIR_CONDITIONER_ONOFF);
 
     $('#reload').click(function() {
         location.reload();
@@ -127,7 +112,7 @@ $(function() {
     }
 
     function checkConnection() {
-        sendToIRKit(DATA_EMPTY)
+        ping()
         .done(handleConnectionSuccess)
         .fail(handleConnectionFail)
         .always(function() {
